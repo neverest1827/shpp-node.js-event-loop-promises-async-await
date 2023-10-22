@@ -1,30 +1,43 @@
-import fetch from "node-fetch";
-import { Response } from "node-fetch";
+import fetch, {Response} from "node-fetch";
 
-type TypeResponse = {
-    name: string;
+const countRequests: number = 3;
+const URL: string = 'https://random-data-api.com/api/name/random_name';
+
+function getRandomName(url: string): Promise<string> {
+    return fetch(url)
+        .then((response: Response) => response.json())
+        .then(data => data.name)
+        .then(name => name)
 }
 
-const countResponse: number = 3;
-const responses: Promise<TypeResponse>[] = [];
+function getPromises(url: string): Promise<string>[] {
+    const promises: Promise<string>[] = []
 
-for (let i: number = 0; i < countResponse; i++) {
-    responses.push(
-        fetch('https://random-data-api.com/api/name/random_name')
-            .then((response) => response.json())
-            .then((data: TypeResponse) => data)
-    )
-}
-
-let names: string[] = ['', '', ''];
-setTimeout( (responses) => {
-
-
-}, checkResult(names));
-
-function checkResult(names: string[]): number {
-    for(let name of names){
-        if (name) return 1
+    for (let i: number = 0; i < countRequests; i++) {
+        promises.push(getRandomName(url))
     }
-    return 0
+
+    return promises
 }
+
+function printRandomNames(url: string): void {
+    const promises: Promise<string>[] = getPromises(url);
+    const names: string[] = [];
+
+    function processPromise(index: number): void {
+        if (index < promises.length) {
+            promises[index]
+                .then( (name: string) => {
+                    names.push(name);
+                    processPromise(index + 1);
+                })
+        } else {
+            names.forEach((name: string) => console.log(name));
+        }
+    }
+
+    processPromise(0);
+}
+
+
+printRandomNames(URL);

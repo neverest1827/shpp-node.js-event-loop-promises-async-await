@@ -1,24 +1,26 @@
 import fetch, {Response} from "node-fetch";
 
-const countNames: number = 3;
+const countRequests: number = 3;
 const URL: string = 'https://random-data-api.com/api/name/random_name';
 
 async function  getRandomNames(url: string): Promise<string[]> {
-    const responses: Response[] = await getResponse(url);
+    const responses: Response[] = await getResponses(url);
     const data: Response[] = await Promise.all(responses);
-    return Promise.all(data.map( async (data: Response): Promise<string> => {
-        const information = await data.json()
-        return  information.name
-    } ))
+    return Promise.all(data.map(
+        async (data: Response): Promise<string> => {
+            const information = await data.json()
+            return information.name
+        })
+    )
 }
 
-async function getResponse(url: string): Promise<Response[]> {
-    const responses: Response[] = [];
-    for (let currentNameNumber: number = 0; currentNameNumber < countNames; currentNameNumber++){
-        const response: Response = await fetch(url);
-        responses.push(response);
+async function getResponses(url: string): Promise<Response[]> {
+    const promises: Promise<Response>[] = [];
+    for (let currentRequestNumber: number = 0; currentRequestNumber < countRequests; currentRequestNumber++){
+        const promise: Promise<Response> = fetch(url);
+        promises.push(promise);
     }
-    return responses;
+    return Promise.all(promises);
 }
 
 const names: string[] = await getRandomNames(URL);
