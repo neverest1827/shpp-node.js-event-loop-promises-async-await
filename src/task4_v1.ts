@@ -4,7 +4,6 @@ import {Response} from "node-fetch";
 const URL: string = 'https://random-data-api.com/api/users/random_user';
 const searchGender: string = 'Female'
 const parallelRequestCount: number = 5;
-let requestCounter: number = 0;
 
 type TypeData = {gender : string}
 function getUserGender(url: string): Promise<string> {
@@ -39,4 +38,4 @@ function getPromises(url: string): Promise<string>[] {
 }
 
 searchUser(URL, searchGender)
-    .then( num => console.log(`It took us ${num} attempts to find a user with the gender female `) )
+    .then( numTries => console.log(`It took us ${numTries} attempts to find a user with the gender female`) )
