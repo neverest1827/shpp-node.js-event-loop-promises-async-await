@@ -12,7 +12,7 @@ async function getUserGender(url: string): Promise<string> {
     return data.gender;
 }
 
-async function searchUser(url: string, searchGender: string): Promise<number> {
+async function getCountTrySearches(url: string, searchGender: string): Promise<number> {
     let counter = 0;
 
     while (true){
@@ -30,5 +30,5 @@ async function searchUser(url: string, searchGender: string): Promise<number> {
     }
 }
 
-const numTries = await searchUser(URL, searchGender);
+const numTries = await getCountTrySearches(URL, searchGender);
 console.log(`\`It took us ${numTries} attempts to find a user with the gender female\``)

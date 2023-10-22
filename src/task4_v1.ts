@@ -13,7 +13,7 @@ function getUserGender(url: string): Promise<string> {
         .catch( (): string => 'Gender not found' )
 }
 
-function searchUser(url: string, searchGender: string, counterValue?: number): Promise<number> {
+function getCountTrySearches(url: string, searchGender: string, counterValue?: number): Promise<number> {
     let counter: number =  counterValue ? counterValue : 0
     const promises: Promise<string>[] = getPromises(url)
 
@@ -22,7 +22,7 @@ function searchUser(url: string, searchGender: string, counterValue?: number): P
             if( usersGender.includes(searchGender) ) {
                 return ++counter
             }
-            return searchUser(url, searchGender, ++counter)
+            return getCountTrySearches(url, searchGender, ++counter)
         } );
 
 }
@@ -37,5 +37,5 @@ function getPromises(url: string): Promise<string>[] {
     return promises;
 }
 
-searchUser(URL, searchGender)
+getCountTrySearches(URL, searchGender)
     .then( numTries => console.log(`It took us ${numTries} attempts to find a user with the gender female`) )
